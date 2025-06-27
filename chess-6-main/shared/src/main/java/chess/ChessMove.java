@@ -7,35 +7,32 @@ package chess;
  * signature of the existing methods.
  */
 public class ChessMove {
-    int start_row;
-    int start_col;
-    int end_row;
-    int end_col;
+    ChessPosition startPosition;
+    ChessPosition endPosition;
     ChessPiece.PieceType promotionPiece;
 
     public ChessMove(ChessPosition startPosition, ChessPosition endPosition,
                      ChessPiece.PieceType promotionPiece) {
-        start_row = startPosition.getRow();
-        start_col = startPosition.getColumn();
-        // TODO: Make something that will validate if the move is allowed or not
-        end_row = endPosition.getRow();
-        end_col = endPosition.getColumn();
+        this.startPosition = startPosition;
+        this.endPosition = endPosition;
         this.promotionPiece = promotionPiece;
 
     }
+
+
 
     /**
      * @return ChessPosition of starting location
      */
     public ChessPosition getStartPosition() {
-        return new ChessPosition(start_row, start_col);
+        return startPosition;
     }
 
     /**
      * @return ChessPosition of ending location
      */
     public ChessPosition getEndPosition() {
-        return new ChessPosition(end_row, end_col);
+        return endPosition;
     }
 
     /**
