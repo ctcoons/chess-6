@@ -114,21 +114,78 @@ public class ValidMovesCalculator {
 
         int[] direction = {-1, 1};
 
+        for (int dir : direction) {
+
+            // ROWS
+            int mag = 1;
+            while (true) {
+                int newRow = myPosition.getRow() + dir * mag;
+                int myCol = myPosition.getColumn();
+
+                if (newRow < 1 || newRow > 8) break;
+                mag++;
+
+                ChessPosition newPos = new ChessPosition(newRow, myCol);
+                ChessPiece newSquarePiece = board.getPiece(newPos);
+
+                if (newSquarePiece == null) {
+                    validMoves.add(new ChessMove(myPosition, newPos, null));
+                    continue;
+                }
+
+                if (newSquarePiece.getTeamColor() == myPiece.getTeamColor()) {
+                    break;
+                }
+
+                if (newSquarePiece.getTeamColor() != myPiece.getTeamColor()) {
+                    validMoves.add(new ChessMove(myPosition, newPos, null));
+                    break;
+                }
+
+                break;
+            }
+
+            mag = 1;
+            while (true) {
+                int myRow = myPosition.getRow();
+                int newCol = myPosition.getColumn() + dir * mag;
+
+                if (newCol < 1 || newCol > 8) break;
+                mag++;
+
+                ChessPosition newPos = new ChessPosition(myRow, newCol);
+                ChessPiece newSquarePiece = board.getPiece(newPos);
+
+                if (newSquarePiece == null) {
+                    validMoves.add(new ChessMove(myPosition, newPos, null));
+                    continue;
+                }
+
+                if (newSquarePiece.getTeamColor() == myPiece.getTeamColor()) {
+                    break;
+                }
+
+                if (newSquarePiece.getTeamColor() != myPiece.getTeamColor()) {
+                    validMoves.add(new ChessMove(myPosition, newPos, null));
+                    break;
+                }
+
+                break;
+            }
+
+
+
+
+
+        }
+
 
         return validMoves;
     }
+
 
     Collection<ChessMove> pawnMoves() {
         throw new RuntimeException("Not implemented");
     }
 
 }
-
-/*
-        KING,
-        QUEEN,
-        BISHOP,
-        KNIGHT,
-        ROOK,
-        PAWN
- */
