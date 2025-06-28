@@ -68,11 +68,54 @@ public class ValidMovesCalculator {
     }
 
     Collection<ChessMove> bishopMoves() {
-        throw new RuntimeException("Not implemented");
+        ArrayList<ChessMove> validMoves = new ArrayList<>();
+
+        int[] direction = {-1, 1};
+
+        for (int rowMult : direction) {
+            for (int colMult : direction) {
+                int mag = 1;
+                while (true) {
+                    int newRow = myPosition.getRow() + rowMult * mag;
+                    int newCol = myPosition.getColumn() + colMult * mag;
+
+                    if (newRow < 1 || newRow > 8 || newCol < 1 || newCol > 8) break;
+                    mag++;
+
+                    ChessPosition newPos = new ChessPosition(newRow, newCol);
+                    ChessPiece newSquarePiece = board.getPiece(newPos);
+
+                    if (newSquarePiece == null) {
+                        validMoves.add(new ChessMove(myPosition, newPos, null));
+                        continue;
+                    }
+
+                    if (newSquarePiece.getTeamColor() == myPiece.getTeamColor()) {
+                        break;
+                    }
+
+                    if (newSquarePiece.getTeamColor() != myPiece.getTeamColor()) {
+                        validMoves.add(new ChessMove(myPosition, newPos, null));
+                        break;
+                    }
+
+                    break;
+
+                }
+            }
+        }
+
+
+        return validMoves;
     }
 
     Collection<ChessMove> rookMoves() {
-        throw new RuntimeException("Not implemented");
+        ArrayList<ChessMove> validMoves = new ArrayList<>();
+
+        int[] direction = {-1, 1};
+
+
+        return validMoves;
     }
 
     Collection<ChessMove> pawnMoves() {
