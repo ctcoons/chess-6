@@ -35,6 +35,9 @@ public class ValidMovesCalculator {
     }
 
     Collection<ChessMove> kingMoves() {
+
+        System.out.println("KING STARTING POSITION [" + myPosition.getRow() + ":" + myPosition.getColumn() + "]");
+
         ArrayList<ChessMove> validMoves = new ArrayList<>();
         for(int colChange = -1; colChange < 2; colChange++) {
             for (int rowChange = -1; rowChange < 2; rowChange++) {
@@ -48,9 +51,11 @@ public class ValidMovesCalculator {
                 ChessPosition newPos = new ChessPosition(newRow, newCol);
 
                 if (board.getPiece(newPos) == null) {
-                    validMoves.add(new ChessMove(myPosition, newPos, myPieceType));
+                    System.out.println("Adding New Position at [" + newRow + ":" + newCol + "]");
+                    validMoves.add(new ChessMove(myPosition, newPos, null));
                 } else if (board.getPiece(newPos).getTeamColor() != myPiece.getTeamColor()) {
-                    validMoves.add(new ChessMove(myPosition, newPos, myPieceType));
+                    System.out.println("Adding New Position at [" + newRow + ":" + newCol);
+                    validMoves.add(new ChessMove(myPosition, newPos, null));
                 }
 
             }
