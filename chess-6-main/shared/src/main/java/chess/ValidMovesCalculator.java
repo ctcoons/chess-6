@@ -26,6 +26,8 @@ public class ValidMovesCalculator {
             return bishopMoves();
         } else if (myPieceType == ChessPiece.PieceType.ROOK) {
             return rookMoves();
+        } else if (myPieceType == ChessPiece.PieceType.KNIGHT) {
+            return knightMoves();
         } else if (myPieceType == ChessPiece.PieceType.PAWN) {
             return pawnMoves();
         } else {
@@ -64,10 +66,68 @@ public class ValidMovesCalculator {
     }
 
     Collection<ChessMove> queenMoves() {
-        throw new RuntimeException("Not implemented");
+        ArrayList<ChessMove> validMoves = new ArrayList<>();
+        validMoves.addAll(diagonal());
+        validMoves.addAll(up_and_down());
+
+        return validMoves;
     }
 
     Collection<ChessMove> bishopMoves() {
+        return diagonal();
+    }
+
+    Collection<ChessMove> rookMoves() {
+        return up_and_down();
+    }
+
+    Collection<ChessMove> knightMoves() {
+        ArrayList<ChessMove> validMoves = new ArrayList<>();
+        int[][] locations = {{-2, 1}, {-2, -1}, {-1, 2}, {-1, -2}, {1, 2}, {1, -2}, {2, 1}, {2, -1}};
+        for(int[] loc : locations) {
+            int newRow = myPosition.getRow() + loc[0];
+            int newCol = myPosition.getColumn() + loc[1];
+
+            if (newRow < 1 || newRow > 8 || newCol < 1 || newCol > 8) continue;
+
+            ChessPosition newPos = new ChessPosition(newRow, newCol);
+            ChessPiece newSquarePiece = board.getPiece(newPos);
+
+            if (newSquarePiece == null) {
+                validMoves.add(new ChessMove(myPosition, newPos, null));
+                continue;
+            }
+
+            if (newSquarePiece.getTeamColor() == myPiece.getTeamColor()) {
+                continue;
+            }
+
+            if (newSquarePiece.getTeamColor() != myPiece.getTeamColor()) {
+                validMoves.add(new ChessMove(myPosition, newPos, null));
+            }
+
+        }
+
+
+        return validMoves;
+    }
+
+    Collection<ChessMove> pawnMoves() {
+
+        ArrayList<ChessMove> validMoves = new ArrayList<>();
+
+        // If pawn is on the back line
+            // If there is a piece 2 spaces ahead while on the back line
+        // If the pawn is not in the back line
+        // If there is a piece in front
+        // If there is an enemy piece diagonal
+        return validMoves;
+
+
+
+    }
+
+    Collection<ChessMove> diagonal() {
         ArrayList<ChessMove> validMoves = new ArrayList<>();
 
         int[] direction = {-1, 1};
@@ -109,7 +169,7 @@ public class ValidMovesCalculator {
         return validMoves;
     }
 
-    Collection<ChessMove> rookMoves() {
+    Collection<ChessMove> up_and_down() {
         ArrayList<ChessMove> validMoves = new ArrayList<>();
 
         int[] direction = {-1, 1};
@@ -183,9 +243,10 @@ public class ValidMovesCalculator {
         return validMoves;
     }
 
+    boolean outOfRange (int[] coordinates) {
+        int newRow = coordinates[0];
+        int newCol = coordinates[1];
 
-    Collection<ChessMove> pawnMoves() {
-        throw new RuntimeException("Not implemented");
+        return newRow < 1 || newRow > 8 || newCol < 1 || newCol > 8;
     }
-
 }
