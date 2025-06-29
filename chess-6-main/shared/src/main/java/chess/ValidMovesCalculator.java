@@ -116,15 +116,80 @@ public class ValidMovesCalculator {
 
         ArrayList<ChessMove> validMoves = new ArrayList<>();
 
+        // ACCOUNTING FOR COLOR
+        int multiplier = 1;
+        if (myPiece.getTeamColor() == ChessGame.TeamColor.BLACK) {
+            multiplier = -1;
+        }
+
+        int currentRow = myPosition.getRow();
+        int currentCol = myPosition.getColumn();
+
+        // Check to see if there is possibility of promotion
+        boolean potentialPromotion = false;
+        if (myPiece.getTeamColor() == ChessGame.TeamColor.WHITE) {
+            if (myPosition.getRow() == 7) {
+                potentialPromotion = true;
+            }
+        } else {
+            if (myPosition.getRow() == 2) {
+                potentialPromotion = true;
+            }
+        }
+
+        // Check if on starting line
+        boolean onStartingLine = false;
+        if ((myPiece.getTeamColor() == ChessGame.TeamColor.WHITE && myPosition.getRow() == 2) || (myPiece.getTeamColor() == ChessGame.TeamColor.BLACK && myPosition.getRow() == 7)) {
+            onStartingLine = true;
+        }
+
+
+        // TODO: Change this when you need to decide what promotion piece you are going to
+        ChessPiece.PieceType prom = null;
+        if (potentialPromotion) {
+            prom = ChessPiece.PieceType.QUEEN;
+        }
+
+        // MOVING STRAIGHT FORWARD
+        if (pieceAtLocation(currentRow + multiplier, currentCol) == null) {
+            ChessPosition destination = new ChessPosition(currentRow + multiplier, currentCol);
+            ChessMove possibleMove = new ChessMove(myPosition, destination, prom);
+            validMoves.add(possibleMove);
+            if (pieceAtLocation(currentRow + 2*multiplier, currentCol) == null && onStartingLine) {
+                ChessPosition destination2 = new ChessPosition(currentRow + 2*multiplier, currentCol);
+                ChessMove possibleMove2 = new ChessMove(myPosition, destination2, prom);
+                validMoves.add(possibleMove2);
+            }
+        }
+
+
+        // Taking an Enemy at + 1 column
+        if (pieceAtLocation(currentRow + multiplier, currentCol + 1) != null) {
+            if (pieceAtLocation(currentRow + multiplier, currentCol + 1).getTeamColor() != myPiece.getTeamColor()) {
+                ChessPosition destination = new ChessPosition(currentRow + multiplier, currentCol + 1);
+                ChessMove possibleMove = new ChessMove(myPosition, destination, prom);
+                validMoves.add(possibleMove);
+            }
+        }
+
+        // Taking an Enemy at -1 column
+        if (pieceAtLocation(currentRow + multiplier, currentCol -1) != null) {
+            if (pieceAtLocation(currentRow + multiplier, currentCol -1).getTeamColor() != myPiece.getTeamColor()) {
+                ChessPosition destination = new ChessPosition(currentRow + multiplier, currentCol - 1);
+                ChessMove possibleMove = new ChessMove(myPosition, destination, prom);
+                validMoves.add(possibleMove);
+            }
+
+        }
+
+
+
         // If pawn is on the back line
             // If there is a piece 2 spaces ahead while on the back line
         // If the pawn is not in the back line
         // If there is a piece in front
         // If there is an enemy piece diagonal
         return validMoves;
-
-
-
     }
 
     Collection<ChessMove> diagonal() {
@@ -248,5 +313,13 @@ public class ValidMovesCalculator {
         int newCol = coordinates[1];
 
         return newRow < 1 || newRow > 8 || newCol < 1 || newCol > 8;
+    }
+
+    ChessPiece pieceAtLocation (int row, int col) {
+        if (row < 1 || row > 8 || col < 1 || col > 8) {
+            return myPiece;
+        }
+        ChessPosition queryPosition = new ChessPosition(row, col);
+        return board.getPiece(queryPosition);
     }
 }
